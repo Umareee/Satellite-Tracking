@@ -1,0 +1,12 @@
+# Core dependencies
+numpy>=1.24.0
+matplotlib>=3.7.0
+skyfield>=1.46.0
+cartopy>=0.21.0
+requests>=2.28.0
+
+
+
+# Note: Cartopy might require additional system dependencies depending on the platform
+# Windows: Visual C++ build tools might be required
+# Linux: PROJ, GEOS, and other geographic libraries might be needed
