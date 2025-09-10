@@ -20,20 +20,9 @@
 - **Multiple Satellite Categories**: Track IntelSat, Starlink, GPS/Galileo/Beidou, Geosynchronous, and CubeSat constellations
 - **Trajectory Prediction**: Visualize future satellite paths with configurable time intervals
 - **Pass Predictions**: Calculate when satellites will be visible from your location
-
-### 🗺️ Interactive Visualization
-- **Dual Map Modes**: Switch between global and polar projection views
-- **High-Resolution Maps**: NASA Earth imagery backgrounds with geographic features
 - **Real-Time Updates**: Live satellite markers with orbital trajectories
 - **Footprint Display**: Satellite ground coverage visualization
-- **Zoom & Pan**: Full map navigation with matplotlib integration
 
-### 🎛️ User Interface
-- **Modern Dark Theme**: Professional interface with neon accent colors
-- **Searchable Satellite List**: Quick filtering through thousands of satellites
-- **Location Selection**: Choose from 100+ predefined cities or enter custom coordinates
-- **Pass Schedule Viewer**: Detailed satellite pass times with CSV export
-- **Live Tracking Controls**: Play/pause functionality for real-time updates
 
 ## 📋 System Requirements
 
@@ -42,7 +31,7 @@
 - **Python**: 3.8 or higher
 - **RAM**: 4 GB minimum, 8 GB recommended
 - **Storage**: 500 MB for application and dependencies
-- **Internet**: Required for initial satellite data download
+- **Internet**: Required for initial satellite data download or updating to latest data
 
 ### Additional System Dependencies
 
@@ -385,17 +374,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Skyfield**: High-precision astronomical calculations
-- **Cartopy**: Geographic projections and mapping
-- **NASA**: Earth imagery datasets
-- **CelesTrak**: Real-time satellite orbital data
-- **matplotlib**: Scientific visualization framework
+### Special Thanks  
+- **Dr. Gibran Javed**  
+- **Dr. Abdul Majid**
+- **Hamza Sultan**
 
 ## 📞 Support
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/satellite-tracker/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yourusername/satellite-tracker/discussions)
-- **Email**: your.email@example.com
+- **Email**: umersaad9222@gmail.com
 
 ---
 
