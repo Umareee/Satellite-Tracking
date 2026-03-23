@@ -4,389 +4,255 @@
 
 ![OrbitX Logo](assets/satellite-logo.ico)
 
-**A sophisticated desktop application for real-time satellite tracking with interactive visualization**
+**A high-fidelity satellite tracking application with multi-propagator support, real-time visualization, and multi-satellite tracking**
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
 
-
 </div>
 
-## 🚀 Features
+## Features
 
-### 🛰️ Real-Time Satellite Tracking
-- **Live Position Calculation**: Real-time satellite position updates using precise orbital mechanics
-- **Multiple Satellite Categories**: Track IntelSat, Starlink, GPS/Galileo/Beidou, Geosynchronous, and CubeSat constellations
-- **Trajectory Prediction**: Visualize future satellite paths with configurable time intervals
-- **Pass Predictions**: Calculate when satellites will be visible from your location
-- **Real-Time Updates**: Live satellite markers with orbital trajectories
-- **Footprint Display**: Satellite ground coverage visualization
+### Satellite Tracking
+- **Live Position Updates** with 500ms refresh and real-time orbital mechanics
+- **Multi-Satellite Tracking** - track up to 5 satellites simultaneously with color-coded trajectories
+- **10 Satellite Categories** - ISS, Starlink, GPS/Galileo/Beidou, IntelSat, Geosynchronous, CubeSats, Weather, Amateur Radio, Science, Earth Observation
+- **Pass Predictions** - calculate visible passes with rise/set times, max elevation, and CSV export
+- **87 Observer Locations** worldwide + custom coordinate input
 
+### Multi-Propagator Engine
+Choose your orbit prediction method based on accuracy needs:
 
-## 📋 System Requirements
+| Propagator | Accuracy (24h) | Speed | Best For |
+|---|---|---|---|
+| **SGP4** | ~1-10 km | Instant | General tracking, hobbyists |
+| **Numerical (Basic)** | ~1-5 km | ~1s | Better LEO accuracy |
+| **Numerical (Standard)** | ~500m-2 km | ~1-2s | Serious tracking |
+| **Numerical (High-Fidelity)** | ~10-100 m | ~2-3s | Mission-grade predictions |
 
-### Minimum Requirements
-- **Operating System**: Windows 10+, macOS 10.14+, or Linux (Ubuntu 18.04+)
-- **Python**: 3.8 or higher
-- **RAM**: 4 GB minimum, 8 GB recommended
-- **Storage**: 500 MB for application and dependencies
-- **Internet**: Required for initial satellite data download or updating to latest data
+**Force models available for numerical propagation:**
+- J2-J6 Earth gravity zonal harmonics
+- Atmospheric drag (28-layer exponential density model, 0-1000km)
+- Solar radiation pressure with cylindrical shadow model
+- Third-body perturbations (Sun and Moon)
+- Configurable drag coefficient and area-to-mass ratio
 
-### Additional System Dependencies
+### Visualization
+- **Global Map** (Plate Carree) with NASA satellite imagery
+- **Polar View** (North Polar Stereographic) for polar orbit analysis
+- **Dark / Light Theme** - full app theme switching via toggle
+- **Ground Footprint** visualization
+- **Trajectory Prediction** - 1 hour ahead with configurable resolution
+- **Zoom and Pan** with matplotlib navigation toolbar
 
-#### Windows
-- Visual C++ Redistributable (usually pre-installed)
-- Windows Defender may require manual approval for executable
+### User Experience
+- **Keyboard Shortcuts** - Space (play/pause), Escape (stop)
+- **Persistent Preferences** - theme, location, last satellite saved automatically
+- **Data Staleness Indicator** - warns when TLE data is outdated (>48h)
+- **Debounced Search** with placeholder text
+- **Status Bar** - satellite count, tracking status, data age
 
-#### Linux (Ubuntu/Debian)
+## System Requirements
+
+- **OS**: Windows 10+, macOS 10.14+, or Linux (Ubuntu 18.04+)
+- **Python**: 3.8+
+- **RAM**: 4 GB minimum
+- **Storage**: 500 MB
+- **Internet**: Required for satellite data download
+
+### System Dependencies
+
+**macOS:**
 ```bash
-sudo apt-get update
-sudo apt-get install python3-dev python3-pip
-sudo apt-get install libproj-dev proj-data proj-bin libgeos-dev
-sudo apt-get install libffi-dev libssl-dev
-```
-
-#### macOS
-```bash
-# Install Homebrew if not already installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install dependencies
 brew install proj geos
 ```
 
-## 🔧 Installation
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt-get install python3-dev libproj-dev proj-data proj-bin libgeos-dev
+```
 
-### Method 1: Run from Source (Recommended for Development)
+## Quick Start
 
-1. **Clone the Repository**
+### Option 1: Automated Setup
+```bash
+python3 setup_dev.py
+source satellite_env/bin/activate
+python3 main.py
+```
+
+### Option 2: Manual Setup
 ```bash
 git clone https://github.com/yourusername/satellite-tracker.git
 cd satellite-tracker
-```
 
-2. **Create Virtual Environment**
-```bash
-python -m venv satellite_env
+python3 -m venv satellite_env
+source satellite_env/bin/activate   # macOS/Linux
+# satellite_env\Scripts\activate    # Windows
 
-# Windows
-satellite_env\Scripts\activate
-
-# macOS/Linux
-source satellite_env/bin/activate
-```
-
-3. **Install Dependencies**
-```bash
 pip install -r requirements.txt
+python3 main.py
 ```
 
-4. **Run the Application**
-```bash
-python main.py
+## Usage
+
+### First Launch
+1. Run the app - it will prompt you to fetch satellite data
+2. Select a category (ISS & Space Stations is a good start)
+3. Click a satellite in the list to see its position
+4. Press **Space** or click **START LIVE TRACKING** for real-time updates
+
+### Multi-Satellite Tracking
+- **Double-click** a satellite in the list to add it to the tracking overlay (up to 5)
+- Each tracked satellite gets a unique color (cyan, orange, purple, green, rose)
+- Double-click again or click **x** to remove from tracking
+
+### Switching Propagators
+1. Use the **Propagator** dropdown in the control panel
+2. Select **SGP4** (fast) or **Numerical** (accurate)
+3. When Numerical is selected, choose a force model preset:
+   - **basic** - J2 + drag (fast, good for quick estimates)
+   - **standard** - J2, J3 + drag (recommended default)
+   - **high_fidelity** - All forces (J2-J6, drag, SRP, Moon, Sun)
+
+### Pass Schedule
+1. Select a satellite
+2. Click **PASS SCHEDULE**
+3. Choose time range (1-30 days) and click **CALCULATE**
+4. Export results to CSV
+
+### Observer Location
+- Click **SELECT LOCATION** to change your position
+- Choose from 87 preset cities or enter custom lat/lon
+- Location is saved automatically for next launch
+
+## Architecture
+
+```
+OrbitX/
+├── main.py                          # Entry point
+├── satellite_tracker.py             # UI controller (callbacks, wiring)
+├── config.py                        # Theme definitions, constants, locations
+│
+├── ui/                              # User interface
+│   ├── controls.py                  # Buttons, toggles, dialogs, satellite list
+│   ├── dashboard.py                 # Telemetry display panel
+│   └── map_display.py               # Cartopy map with trajectories
+│
+└── utils/                           # Backend logic
+    ├── data_manager.py              # TLE data lifecycle (load, fetch, save)
+    ├── tracking.py                  # Tracking state, trajectory computation
+    ├── preferences.py               # User settings persistence (JSON)
+    ├── orbit_calc.py                # Public API (propagator facade)
+    ├── satellite_data.py            # TLE fetch, parse, validate
+    ├── theme.py                     # Shared theme utilities
+    ├── resource_utils.py            # PyInstaller path resolution
+    └── propagators/                 # Orbit propagation engines
+        ├── __init__.py              # PropagatorType, ForceModel config
+        ├── base.py                  # Abstract base class + TLE parser
+        ├── sgp4_prop.py             # SGP4/SDP4 via Skyfield
+        ├── numerical_prop.py        # Cowell's method + RK8 integrator
+        └── perturbations.py         # Force models (J2-J6, drag, SRP, 3rd body)
 ```
 
-### Method 2: Install as Package
+### Key Design Decisions
+- **Propagator pattern** - swap SGP4/Numerical at runtime without changing UI code
+- **Thin controller** - `satellite_tracker.py` only wires callbacks; logic lives in `utils/`
+- **Theme system** - every widget accepts a theme dict, supports live switching
+- **Data manager** - thread-safe TLE fetching with success/error callbacks
+
+## Dependencies
+
+| Package | Purpose |
+|---|---|
+| numpy | Numerical computation |
+| matplotlib | 2D visualization and map rendering |
+| skyfield | SGP4 orbital mechanics |
+| cartopy | Geospatial map projections |
+| requests | HTTP for TLE data fetching |
+| scipy | Numerical integration (RK8) and Cartopy transforms |
+| poliastro | Astrodynamics utilities |
+
+## Building Executable
 
 ```bash
-pip install git+https://github.com/yourusername/satellite-tracker.git
-satellite-tracker
+python3 build.py
 ```
 
-## 🏗️ Building Executable
-
-To create a standalone executable that doesn't require Python installation:
-
-### Prerequisites
+Or manually:
 ```bash
-pip install pyinstaller
-```
-
-### Build Process
-
-#### Windows Executable
-```bash
-# Single file executable (slower startup, portable)
-pyinstaller --onefile --windowed --icon=assets/satellite-logo.ico --name="OrbitX" main.py
-
-# Directory distribution (faster startup)
-pyinstaller --onedir --windowed --icon=assets/satellite-logo.ico --name="OrbitX" main.py
-```
-
-#### Linux/macOS Executable
-```bash
-# Single file executable
-pyinstaller --onefile --windowed --icon=assets/satellite-logo.ico --name="OrbitX" main.py
-
-# App bundle (macOS)
-pyinstaller --onedir --windowed --icon=assets/satellite-logo.ico --name="OrbitX" main.py
-```
-
-### Advanced Build Options
-
-For a more optimized build with better compatibility:
-
-```bash
-pyinstaller --onefile \
-    --windowed \
-    --icon=assets/satellite-logo.ico \
+pyinstaller --onefile --windowed --icon=assets/satellite-logo.ico \
     --name="OrbitX" \
-    --add-data="assets/*;assets/" \
-    --add-data="tle.txt;." \
+    --add-data="assets/*:assets/" \
     --hidden-import=skyfield.data \
     --hidden-import=cartopy.feature \
-    --exclude-module=tkinter.test \
     main.py
 ```
 
-### Build Script
+## Configuration
 
-Create a `build.py` script for automated building:
-
-```python
-import PyInstaller.__main__
-import sys
-import os
-
-def build_executable():
-    args = [
-        '--onefile',
-        '--windowed',
-        '--icon=assets/satellite-logo.ico',
-        '--name=OrbitX',
-        '--add-data=assets/*;assets/',
-        '--add-data=tle.txt;.',
-        '--hidden-import=skyfield.data',
-        '--hidden-import=cartopy.feature',
-        '--exclude-module=tkinter.test',
-        'main.py'
-    ]
-    
-    PyInstaller.__main__.run(args)
-
-if __name__ == "__main__":
-    build_executable()
-```
-
-Run with: `python build.py`
-
-## 📖 Usage Guide
-
-### First Launch
-
-1. **Start the Application**
-   - Run `python main.py` or launch the executable
-   - The application will load with a default satellite selection
-
-2. **Update Satellite Data**
-   - Click "🔄 UPDATE DATA" to fetch the latest satellite information
-   - Select a satellite category (Starlink, GPS, etc.)
-   - Wait for the download to complete
-
-### Basic Operations
-
-#### Selecting Satellites
-- Use the search box to filter satellites by name
-- Click on any satellite in the list to start tracking
-- The map will center on the selected satellite
-
-#### Map Navigation
-- **Zoom**: Use mouse wheel or toolbar buttons
-- **Pan**: Click and drag to move the map
-- **Reset View**: Double-click to reset zoom level
-
-#### View Modes
-- **Global View**: Standard world map projection
-- **Polar View**: Arctic/Antarctic centered view (useful for polar orbits)
-- **Light/Dark Mode**: Toggle between NASA day/night imagery
-
-#### Location Settings
-- Click "📍 SELECT LOCATION" to change your observer position
-- Choose from predefined cities or enter custom coordinates
-- This affects satellite pass predictions and elevation angles
-
-### Advanced Features
-
-#### Live Tracking
-- Click "⏵ LIVE TRACKING" to enable real-time updates
-- Satellite position updates every 500ms
-- Click "⏸ PAUSE" to stop live updates
-
-#### Satellite Passes
-- Click "📅 SCHEDULE" to view upcoming passes
-- Select time range (1-30 days)
-- Export schedule to CSV for external use
-
-#### Data Export
-- Schedule data can be exported as CSV files
-- Files include rise/set times, azimuths, and pass duration
-- Saved to the application directory
-
-## 🔧 Configuration
-
-### Customizing Settings
-
-Edit `config.py` to modify:
+Edit `config.py` to customize:
 
 ```python
-# Update intervals (milliseconds)
-UPDATE_INTERVAL = 500
-
-# Color scheme
-DARK_BG = "#0B1426"
-ACCENT_COLOR = "#00b4d8"
+# Update frequency
+UPDATE_INTERVAL_MS = 500
+TRAJECTORY_UPDATE_INTERVAL_S = 10
 
 # Add custom locations
-LOCATIONS["My Location"] = (latitude, longitude)
+LOCATIONS["My City"] = (latitude, longitude)
 
 # Add custom satellite sources
-SATELLITE_CATEGORIES["Custom"] = "https://example.com/tle-data.txt"
+SATELLITE_CATEGORIES["My Sats"] = "https://celestrak.org/NORAD/elements/gp.php?GROUP=xxx&FORMAT=tle"
 ```
 
-### Data Sources
+### Force Model Configuration
 
-The application fetches TLE (Two-Line Element) data from celestrak.org:
-- **IntelSat**: Commercial communication satellites
-- **Starlink**: SpaceX internet constellation
-- **GNSS**: GPS, Galileo, BeiDou navigation satellites
-- **Geosynchronous**: Active geostationary satellites
-- **CubeSats**: Small research satellites
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Application Won't Start
-```bash
-# Check Python version
-python --version  # Should be 3.8+
-
-# Reinstall dependencies
-pip install --upgrade -r requirements.txt
-
-# Check for missing system libraries
-python -c "import cartopy, matplotlib, skyfield"
-```
-
-#### Map Display Issues
-- **Blank Map**: Install cartopy dependencies
-- **Slow Rendering**: Reduce update frequency in config.py
-- **Memory Issues**: Close other applications, increase system RAM
-
-#### Network/Data Issues
-```bash
-# Test internet connectivity
-python -c "import requests; print(requests.get('https://celestrak.org').status_code)"
-
-# Clear cached data
-rm -rf ~/skyfield-data/*  # Linux/macOS
-del %USERPROFILE%\skyfield-data\*  # Windows
-```
-
-#### Build Issues
-
-**PyInstaller Problems:**
-```bash
-# Clean build
-pyinstaller --clean main.spec
-
-# Verbose output for debugging
-pyinstaller --log-level DEBUG main.py
-```
-
-**Missing Dependencies:**
-```bash
-# Manually add missing modules
-pyinstaller --hidden-import=missing_module main.py
-```
-
-### Performance Optimization
-
-#### For Better Performance:
-- Disable live tracking when not needed
-- Reduce trajectory point count in `config.py`
-- Use polar view for high-latitude satellites
-- Close other memory-intensive applications
-
-#### For Lower Resource Usage:
 ```python
-# In config.py
-UPDATE_INTERVAL = 1000  # Slower updates
-TRAJECTORY_POINTS = 60  # Fewer trajectory points
+from utils.propagators import ForceModel
+
+custom_model = ForceModel(
+    j2=True, j3=True, j4=True,
+    atmospheric_drag=True,
+    solar_radiation_pressure=True,
+    third_body_moon=True,
+    drag_coefficient=2.2,        # Typical: 2.0-2.5
+    area_to_mass_ratio=0.01,     # m^2/kg
+)
 ```
 
-## 📁 Project Structure
+## Troubleshooting
 
-```
-satellite-tracker/
-├── main.py                 # Application entry point
-├── satellite_tracker.py    # Main application class
-├── config.py              # Configuration and constants
-├── requirements.txt       # Python dependencies
-├── tle.txt               # Cached satellite data
-├── assets/               # Images and icons
-│   ├── satellite-logo.ico
-│   ├── nasa_dark.jpg
-│   ├── nasa_light.jpg
-│   └── satellite.webp
-├── ui/                   # User interface components
-│   ├── __init__.py
-│   ├── controls.py       # Control panels and dialogs
-│   ├── dashboard.py      # Satellite data display
-│   └── map_display.py    # Map visualization
-└── utils/                # Utility modules
-    ├── __init__.py
-    ├── orbit_calc.py     # Orbital mechanics
-    ├── resource_utils.py # Resource path management
-    └── satellite_data.py # TLE data handling
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and test thoroughly
-4. Submit a pull request with detailed description
-
-### Development Setup
-
+**App won't start:**
 ```bash
-# Install development dependencies
-pip install -r requirements.txt
-pip install pytest black flake8
-
-# Run tests
-pytest tests/
-
-# Format code
-black satellite_tracker/ ui/ utils/
-
-# Lint code
-flake8 satellite_tracker/ ui/ utils/
+python3 -c "import cartopy, matplotlib, skyfield, scipy"
 ```
 
-## 📜 License
+**Blank map:** Install system dependencies (proj, geos) and reinstall cartopy.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**Polar view error:** Ensure scipy is installed (`pip install scipy`).
 
-## 🙏 Acknowledgments
+**Numerical propagator slow:** Use "basic" or "standard" preset instead of "high_fidelity". High-fidelity computes 9 force models per integration step.
 
-### Special Thanks  
-- **Dr. Gibran Javed**  
+**Stale data warning:** Click UPDATE DATA to fetch fresh TLEs. Satellite positions drift ~1-10 km/day with old data.
+
+## License
+
+MIT License - see [LICENSE](LICENSE).
+
+## Acknowledgments
+
+- **Dr. Gibran Javed**
 - **Dr. Abdul Majid**
 - **Hamza Sultan**
 
-## 📞 Support
+## Contact
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/satellite-tracker/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/satellite-tracker/discussions)
 - **Email**: umersaad9222@gmail.com
 
 ---
 
 <div align="center">
-<b>Happy Satellite Tracking! 🛰️</b>
+<b>OrbitX - Track anything in orbit.</b>
 </div>

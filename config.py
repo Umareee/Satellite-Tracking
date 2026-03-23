@@ -1,20 +1,97 @@
 # Constants and configuration
+import logging
 
-# UI Colors
-DARK_BG = "#0B1426"
-CARD_BG = "#1A2332"
-FG_COLOR = "#ffffff"
-ACCENT_COLOR = "#00b4d8"
-NEON_GREEN = "#39ff14"
-TRAJECTORY_COLOR = "#00ff00"
-GROUND_CIRCLE = "#FF6B35"
-BORDER_COLOR = "#7d7d7d"
+# Logging configuration
+LOG_FORMAT = '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+LOG_LEVEL = logging.INFO
+
+# Theme definitions
+THEMES = {
+    'dark': {
+        'bg': "#0a0e17",
+        'bg_deeper': "#060a12",
+        'card': "#111827",
+        'card_hover': "#1a2332",
+        'card_border': "#1e293b",
+        'fg': "#e2e8f0",
+        'fg_muted': "#94a3b8",
+        'accent': "#06b6d4",
+        'accent_hover': "#22d3ee",
+        'green': "#10b981",
+        'warning': "#f59e0b",
+        'error': "#ef4444",
+        'trajectory': "#06b6d4",
+        'footprint': "#f97316",
+        'border': "#334155",
+        'map_coast': "#475569",
+        'map_border': "#334155",
+        'map_grid': "#475569",
+        'map_face': "#0a0e17",
+    },
+    'light': {
+        'bg': "#f1f5f9",
+        'bg_deeper': "#e2e8f0",
+        'card': "#ffffff",
+        'card_hover': "#f8fafc",
+        'card_border': "#cbd5e1",
+        'fg': "#0f172a",
+        'fg_muted': "#64748b",
+        'accent': "#0891b2",
+        'accent_hover': "#06b6d4",
+        'green': "#059669",
+        'warning': "#d97706",
+        'error': "#dc2626",
+        'trajectory': "#0891b2",
+        'footprint': "#ea580c",
+        'border': "#94a3b8",
+        'map_coast': "#475569",
+        'map_border': "#94a3b8",
+        'map_grid': "#94a3b8",
+        'map_face': "#f1f5f9",
+    },
+}
+
+# Default theme
+DEFAULT_THEME = 'dark'
+
+# Quick access to current dark theme colors (used as defaults)
+DARK_BG = THEMES['dark']['bg']
+DARKER_BG = THEMES['dark']['bg_deeper']
+CARD_BG = THEMES['dark']['card']
+CARD_BG_HOVER = THEMES['dark']['card_hover']
+CARD_BORDER = THEMES['dark']['card_border']
+FG_COLOR = THEMES['dark']['fg']
+FG_MUTED = THEMES['dark']['fg_muted']
+ACCENT_COLOR = THEMES['dark']['accent']
+ACCENT_HOVER = THEMES['dark']['accent_hover']
+NEON_GREEN = THEMES['dark']['green']
+WARNING_COLOR = THEMES['dark']['warning']
+ERROR_COLOR = THEMES['dark']['error']
+TRAJECTORY_COLOR = THEMES['dark']['trajectory']
+GROUND_CIRCLE = THEMES['dark']['footprint']
+BORDER_COLOR = THEMES['dark']['border']
+HEADER_BG = "#0f172a"
 
 # File paths
 TLE_FILE = 'tle.txt'
+PREFERENCES_FILE = 'preferences.json'
 
 # Physics constants
-EARTH_RADIUS = 6371  # km
+EARTH_RADIUS = 6378.137  # km (WGS-84 equatorial radius)
+
+# Update intervals
+UPDATE_INTERVAL_MS = 500
+TRAJECTORY_UPDATE_INTERVAL_S = 10
+STALE_DATA_HOURS = 48
+
+# Multi-tracking colors (up to 5 satellites)
+MULTI_TRACK_COLORS = [
+    "#06b6d4",  # cyan
+    "#f97316",  # orange
+    "#a855f7",  # purple
+    "#10b981",  # green
+    "#f43f5e",  # rose
+]
 
 # Pre-defined observer locations
 LOCATIONS = {
@@ -69,7 +146,7 @@ LOCATIONS = {
     "Santiago, Chile": (-33.4489, -70.6693),
     "Bucharest, Romania": (44.4268, 26.1025),
     "Islamabad, Pakistan": (33.6844, 73.0479),
-     "San Francisco, USA": (37.7749, -122.4194),
+    "San Francisco, USA": (37.7749, -122.4194),
     "Chicago, USA": (41.8781, -87.6298),
     "Houston, USA": (29.7604, -95.3698),
     "Boston, USA": (42.3601, -71.0589),
@@ -117,15 +194,19 @@ LOCATIONS = {
     "San José, Costa Rica": (9.9281, -84.0907),
     "Port-au-Prince, Haiti": (18.5944, -72.3074),
     "Kingston, Jamaica": (18.0179, -76.8099),
-    "Reykjavik, Iceland": (64.1355, -21.8954)
+    "Reykjavik, Iceland": (64.1355, -21.8954),
 }
-
 
 # Data sources
 SATELLITE_CATEGORIES = {
-    "IntelSat": "https://celestrak.org/NORAD/elements/gp.php?GROUP=intelsat&FORMAT=tle",
+    "ISS & Space Stations": "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle",
     "Starlink": "https://celestrak.org/NORAD/elements/gp.php?GROUP=starlink&FORMAT=tle",
+    "IntelSat": "https://celestrak.org/NORAD/elements/gp.php?GROUP=intelsat&FORMAT=tle",
     "GPS, Galileo, Beidou": "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=tle",
-    "Active Geosynchronous (Intelsat, SES, etc.)": "https://celestrak.org/NORAD/elements/gp.php?GROUP=geo&FORMAT=tle",
-    "CubeSats": "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=tle"
+    "Active Geosynchronous": "https://celestrak.org/NORAD/elements/gp.php?GROUP=geo&FORMAT=tle",
+    "CubeSats": "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=tle",
+    "Weather Satellites": "https://celestrak.org/NORAD/elements/gp.php?GROUP=weather&FORMAT=tle",
+    "Amateur Radio": "https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=tle",
+    "Science Satellites": "https://celestrak.org/NORAD/elements/gp.php?GROUP=science&FORMAT=tle",
+    "Earth Observation": "https://celestrak.org/NORAD/elements/gp.php?GROUP=resource&FORMAT=tle",
 }
